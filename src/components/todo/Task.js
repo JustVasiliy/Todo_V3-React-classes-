@@ -1,113 +1,120 @@
 import React, { Component } from "react";
-import "../../css/style.css";
-import { getCookie } from "../../../config/getCookie";
+import "../../../dist/css/style.css";
 import { API } from "../../API/API";
 import { url } from "../../../config";
 const api = new API(url);
 class Task extends React.Component {
-  constructor() {
+  constructor({ name, checked, id, token, getToken }) {
     super();
-
+    this.name = name;
+    this.checked = checked;
+    this.id = id;
+    this.token = token;
+    this.getToken = getToken;
     this.state = {
       checked: false,
       changeDisplay: "none",
       name: null,
-      delete: false
+      delete: false,
     };
   }
 
-  complete = async () => {
+  completeTask = async () => {
     let isCheck = this.state.checked;
     this.setState({ checked: !isCheck });
-    const token = getCookie("token");
-    const res = await api.callAPI("put", "PUT", token, {
-      id: this.props.id,
-      name: this.props.name,
+    const token = this.token;
+    const callAPI = await api.callAPI("put", "PUT", token, {
+      id: this.id,
+      name: this.name,
       checked: !isCheck,
       deleted: false,
       editing: false,
     });
-    const status = await res.json();
-    if (status.status === 401) {
+    const status = await callAPI.json();
+    if ((await status.message) === "Invalid token") {
       document.cookie = "token=Invalid token";
-      window.location.reload();
+      this.getToken("Invalid token");
     }
   };
-  save = async () => {
+  saveTaskСhanges = async () => {
     let display = this.state.changeDisplay;
     display = "none";
     this.setState({ changeDisplay: display });
 
-    const text = document.getElementById(this.props.id).children[3].value;
+    const text = document.getElementById(this.id).children[3].value;
     if (text.trim() !== "") {
       this.setState({ name: text });
-      const token = getCookie("token");
-      const res = await api.callAPI("put", "PUT", token, {
-        id: this.props.id,
+      const token = this.token;
+      const callAPI = await api.callAPI("put", "PUT", token, {
+        id: this.id,
         name: text,
         checked: this.state.checked,
         deleted: false,
         editing: false,
       });
-      const status = await res.json();
-      if (status.status === 401) {
+      const status = await callAPI.json();
+      if ((await status.message) === "Invalid token") {
         document.cookie = "token=Invalid token";
-        window.location.reload();
+        this.getToken("Invalid token");
       }
     }
   };
-  change = () => {
+  changeTask = () => {
     let display = this.state.changeDisplay;
     display = "block";
     this.setState({ changeDisplay: display });
   };
-  delete = async () => {
-    this.setState({delete: true})
-    const token = getCookie("token");
-    const res = await api.callAPI("delete", "DELETE", token, { id: this.props.id });
-    const status = await res.json();
-    if (status.message === "Invalid token") {
+  deleteTask = async () => {
+    this.setState({ delete: true });
+    const token = this.token;
+    const callAPI = await api.callAPI("delete", "DELETE", token, {
+      id: this.id,
+    });
+    const status = await callAPI.json();
+    if ((await status.message) === "Invalid token") {
       document.cookie = "token=Invalid token";
-      window.location.reload();
+      this.getToken("Invalid token");
     }
-  }
+  };
   componentDidMount() {
-    let isCheck = this.props.checked;
+    let isCheck = this.checked;
     this.setState({ checked: isCheck });
-    let name = this.props.name;
+    let name = this.name;
     this.setState({ name: name });
   }
   render() {
     return (
       <>
-        <li className="parentPosition" id={this.props.id} className={this.state.delete ? "deleted" : null}>
+        <li
+          className="parentPosition"
+          id={this.id}
+          className={this.state.delete ? "deleted" : null}>
           <p className={this.state.checked ? "pCheck" : null}>
             {this.state.name}
           </p>
           <input
             className="check"
             type="checkbox"
-            onClick={this.complete}
-            checked={this.state.checked}
-          ></input>
+            onClick={this.completeTask}
+            checked={this.state.checked}></input>
           <div className="ButtonGroup parentPosition">
             <button
               className="saveBtn"
               style={{ display: this.state.changeDisplay }}
-              onClick={this.save}
-            >
+              onClick={this.saveTaskСhanges}>
               save
             </button>
-            <button className="change" onClick={this.change}>
+            <button className="change" onClick={this.changeTask}>
               Change
             </button>
-            <button className="delete" onClick={this.delete}>Delete</button>
+            <button className="delete" onClick={this.deleteTask}>
+              Delete
+            </button>
           </div>
           <input
             className="inputChange"
             type="text"
-            style={{ display: this.state.changeDisplay }}
-          ></input>
+            style={{ display: this.state.changeDisplay }}></input>
         </li>
       </>
     );
