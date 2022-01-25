@@ -23,7 +23,7 @@ class MainForm extends React.Component {
     const callAPI = await api.callAPI("get", "GET", token);
     if (callAPI.message === "Invalid token") {
       document.cookie = "token=Invalid token";
-      this.test("Invalid token");
+      this.catchToken("Invalid token");
     } else {
       this.setState({ todos: await callAPI });
     }
@@ -52,7 +52,7 @@ class MainForm extends React.Component {
   };
   logOut = () => {
     document.cookie = "token=Invalid token";
-    this.test("Invalid token");
+    this.catchToken("Invalid token");
   };
   componentDidMount() {
     this.getTasks();
