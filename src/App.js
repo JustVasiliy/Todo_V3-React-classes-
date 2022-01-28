@@ -22,7 +22,8 @@ class App extends React.Component {
     if (
       this.state.token === "Invalid token" ||
       this.state.token === "" ||
-      this.state.token === undefined
+      this.state.token === undefined ||
+      this.state.token === "error"
     ) {
       return <RegistrOrAuth token={this.state.token} />;
     } else if (this.state.token === "registration") {

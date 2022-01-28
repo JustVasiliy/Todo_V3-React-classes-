@@ -29,7 +29,7 @@ class Registration extends React.Component {
       nickname.trim() !== "" ||
       password.trim() !== ""
     ) {
-      const call = await api.callAPI("registration", "POST", "123", {
+      const call = await api.callAPI("api/registration", "POST", "123", {
         name: name.trim(),
         surname: surname.trim(),
         nickname: nickname.trim(),

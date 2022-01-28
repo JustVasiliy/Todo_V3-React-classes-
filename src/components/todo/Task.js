@@ -23,12 +23,12 @@ class Task extends React.Component {
     let isCheck = this.state.checked;
     this.setState({ checked: !isCheck });
     const token = this.token;
-    const callAPI = await api.callAPI("put", "PUT", token, {
+    const callAPI = await api.callAPI("api/task/put", "PUT", token, {
       id: this.id,
       name: this.name,
       checked: !isCheck,
       deleted: false,
-      editing: false,
+     
     });
     const status = await callAPI.json();
     if ((await status.message) === "Invalid token") {
@@ -45,7 +45,7 @@ class Task extends React.Component {
     if (text.trim() !== "") {
       this.setState({ name: text });
       const token = this.token;
-      const callAPI = await api.callAPI("put", "PUT", token, {
+      const callAPI = await api.callAPI("api/task/put", "PUT", token, {
         id: this.id,
         name: text,
         checked: this.state.checked,
@@ -67,7 +67,7 @@ class Task extends React.Component {
   deleteTask = async () => {
     this.setState({ delete: true });
     const token = this.token;
-    const callAPI = await api.callAPI("delete", "DELETE", token, {
+    const callAPI = await api.callAPI("api/task/delete", "DELETE", token, {
       id: this.id,
     });
     const status = await callAPI.json();

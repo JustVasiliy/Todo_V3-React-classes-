@@ -19,7 +19,7 @@ class Authorization extends React.Component {
     const password = this.state.nickname;
 
     if (nickname.trim() !== "" || password.trim() !== "") {
-      const callAPI = await api.callAPI("authorization", "POST", "", {
+      const callAPI = await api.callAPI("api/authorization", "POST", "", {
         nickname: nickname.trim(),
         password: password.trim(),
       });

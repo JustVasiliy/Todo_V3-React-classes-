@@ -27,7 +27,7 @@ class InputForm extends React.Component {
         <label className={this.style}>{this.labelText} </label>
         <input
           className={this.style}
-          id={this.for}
+          id={this.forInput}
           placeholder={this.placeholder}
           name={this.forInput}
           type={this.type}

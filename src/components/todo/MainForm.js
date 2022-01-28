@@ -20,7 +20,7 @@ class MainForm extends React.Component {
 
   getTasks = async () => {
     const token = this.props.token;
-    const callAPI = await api.callAPI("get", "GET", token);
+    const callAPI = await api.callAPI("api/task/get", "GET", token);
     if (callAPI.message === "Invalid token") {
       document.cookie = "token=Invalid token";
       this.catchToken("Invalid token");
@@ -33,17 +33,16 @@ class MainForm extends React.Component {
     const input = document.querySelector(".inputCreateName");
     if (input.value.trim() !== "") {
       const token = this.props.token;
-      await api.callAPI("create", "POST", token, {
+      await api.callAPI("api/task/create", "POST", token, {
         name: input.value.trim(),
         checked: false,
         deleted: false,
-        editing: false,
         token: token,
       });
-      const callAPI = await api.callAPI("get", "GET", token);
+      const callAPI = await api.callAPI("api/task/get", "GET", token);
       if (callAPI.message === "Invalid token") {
         document.cookie = `token=${callAPI.message}`;
-        this.test("Invalid token");
+        this.catchToken("Invalid token");
       } else {
         this.setState({ todos: await callAPI });
       }
