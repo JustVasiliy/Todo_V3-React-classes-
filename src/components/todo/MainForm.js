@@ -9,6 +9,7 @@ const api = new API(url);
 class MainForm extends React.Component {
   constructor() {
     super();
+    this.inputRef= React.createRef();
     this.state = {
       checked: false,
       todos: [],
@@ -30,11 +31,12 @@ class MainForm extends React.Component {
   };
 
   createTask = async () => {
-    const input = document.querySelector(".inputCreateName");
-    if (input.value.trim() !== "") {
+    const input = this.inputRef.current.value;
+    
+    if (input.trim() !== "") {
       const token = this.props.token;
       await api.callAPI("api/task/create", "POST", token, {
-        name: input.value.trim(),
+        name: input.trim(),
         checked: false,
         deleted: false,
         token: token,
@@ -47,7 +49,7 @@ class MainForm extends React.Component {
         this.setState({ todos: await callAPI });
       }
     }
-    input.value = "";
+    this.inputRef.current.value = "";
   };
   logOut = () => {
     document.cookie = "token=Invalid token";
@@ -75,12 +77,14 @@ class MainForm extends React.Component {
                   checked={el.checked}
                   token={this.props.token}
                   getToken={this.catchToken}
+                  
                 />
               );
             })}
           </ul>
           <div className="createNewItem">
             <input
+            ref={this.inputRef}
               className="inputCreateName"
               type="text"
               placeholder="Write todo..."></input>

@@ -11,6 +11,7 @@ class Task extends React.Component {
     this.id = id;
     this.token = token;
     this.getToken = getToken;
+    this.inputRef= React.createRef();
     this.state = {
       checked: false,
       changeDisplay: "none",
@@ -82,6 +83,10 @@ class Task extends React.Component {
     let name = this.name;
     this.setState({ name: name });
   }
+  setInputValue = () => {
+    this.setState({ name: this.inputRef.current.value});
+    
+  }
   render() {
     return (
       <>
@@ -114,7 +119,11 @@ class Task extends React.Component {
           <input
             className="inputChange"
             type="text"
-            style={{ display: this.state.changeDisplay }}></input>
+            style={{ display: this.state.changeDisplay }}
+            ref={this.inputRef}
+            onChange={this.setInputValue}
+            ></input>
+            
         </li>
       </>
     );
