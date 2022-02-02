@@ -38,7 +38,6 @@ class App extends React.Component {
           value={{
             token: this.state.token,
             getToken: this.getTokenFromСhildComponent,
-            todos: []
           }}
         >
           <MainForm />

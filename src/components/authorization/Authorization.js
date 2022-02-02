@@ -15,10 +15,9 @@ class Authorization extends React.Component {
     };
   }
   handleFormSubmit = async () => {
-    
     const nickname = this.state.nickname;
     const password = this.state.password;
-    
+
     if (nickname.trim() !== "" || password.trim() !== "") {
       const callAPI = await api.callAPI("api/authorization", "POST", "", {
         nickname: nickname.trim(),

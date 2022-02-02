@@ -17,20 +17,17 @@ class InputForm extends React.Component {
   }
 
   setInputValue = (e) => {
-    const {value} = e.target
-    this.setState(prevState => {
+    const { value } = e.target;
+    this.setState((prevState) => {
       const newState = {
-        inputValue: value
-      }
-      this.fun(newState.inputValue, this.inputRef.current.name)
-      return newState
-
+        inputValue: value,
+      };
+      this.fun(newState.inputValue, this.inputRef.current.name);
+      return newState;
     });
   };
 
- 
   render() {
-    
     return (
       <>
         <label className={this.style}>{this.labelText} </label>
