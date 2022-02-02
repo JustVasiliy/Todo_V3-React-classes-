@@ -4,6 +4,7 @@ import Registration from "./components/registration/Registration";
 import MainForm from "./components/todo/MainForm";
 import RegistrOrAuth from "./components/RegistrOrAuth";
 import { getCookie } from "../config/getCookie.js";
+import { TokenContext } from "./service/context";
 
 class App extends React.Component {
   constructor() {
@@ -12,6 +13,7 @@ class App extends React.Component {
       token: "",
     };
   }
+  static contextType = TokenContext;
   getTokenFromСhildComponent = (token) => {
     this.setState({ token });
   };
@@ -32,10 +34,15 @@ class App extends React.Component {
       return <Authorization token={this.state.token} />;
     } else {
       return (
-        <MainForm
-          token={this.state.token}
-          getToken={this.getTokenFromСhildComponent}
-        />
+        <TokenContext.Provider
+          value={{
+            token: this.state.token,
+            getToken: this.getTokenFromСhildComponent,
+            todos: []
+          }}
+        >
+          <MainForm />
+        </TokenContext.Provider>
       );
     }
   }

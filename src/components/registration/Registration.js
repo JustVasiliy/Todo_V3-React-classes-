@@ -64,7 +64,8 @@ class Registration extends React.Component {
           className="Registr"
           onSubmit={function (event) {
             event.preventDefault();
-          }}>
+          }}
+        >
           <h2>Registration</h2>
           <InputForm
             labelText={"Name"}

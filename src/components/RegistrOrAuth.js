@@ -13,7 +13,8 @@ class RegistrOrAuth extends React.Component {
             onClick={() => {
               document.cookie = "token=registration";
               window.location.reload();
-            }}>
+            }}
+          >
             Registration
           </a>
           <a
@@ -22,7 +23,8 @@ class RegistrOrAuth extends React.Component {
             onClick={() => {
               document.cookie = "token=authorization";
               window.location.reload();
-            }}>
+            }}
+          >
             Authorization
           </a>
         </div>

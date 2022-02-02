@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "../../../dist/css/style.css";
 import { API } from "../../API/API";
 import { url } from "../../../config";
+
+import { TokenContext } from "../../service/context";
 const api = new API(url);
 class Task extends React.Component {
   constructor({ name, checked, id, token, getToken }) {
@@ -11,7 +13,7 @@ class Task extends React.Component {
     this.id = id;
     this.token = token;
     this.getToken = getToken;
-    this.inputRef= React.createRef();
+    this.inputRef = React.createRef();
     this.state = {
       checked: false,
       changeDisplay: "none",
@@ -19,17 +21,16 @@ class Task extends React.Component {
       delete: false,
     };
   }
-
+  static contextType = TokenContext;
   completeTask = async () => {
     let isCheck = this.state.checked;
     this.setState({ checked: !isCheck });
-    const token = this.token;
+    const token = this.context.token;
     const callAPI = await api.callAPI("api/task/put", "PUT", token, {
       id: this.id,
       name: this.name,
-      checked: !isCheck,
+      checked: this.state.checked,
       deleted: false,
-     
     });
     const status = await callAPI.json();
     if ((await status.message) === "Invalid token") {
@@ -45,7 +46,7 @@ class Task extends React.Component {
     const text = document.getElementById(this.id).children[3].value;
     if (text.trim() !== "") {
       this.setState({ name: text });
-      const token = this.token;
+      const token = this.context.token;
       const callAPI = await api.callAPI("api/task/put", "PUT", token, {
         id: this.id,
         name: text,
@@ -67,7 +68,7 @@ class Task extends React.Component {
   };
   deleteTask = async () => {
     this.setState({ delete: true });
-    const token = this.token;
+    const token = this.context.token;
     const callAPI = await api.callAPI("api/task/delete", "DELETE", token, {
       id: this.id,
     });
@@ -84,16 +85,16 @@ class Task extends React.Component {
     this.setState({ name: name });
   }
   setInputValue = () => {
-    this.setState({ name: this.inputRef.current.value});
-    
-  }
+    this.setState({ name: this.inputRef.current.value });
+  };
   render() {
     return (
       <>
         <li
           className="parentPosition"
           id={this.id}
-          className={this.state.delete ? "deleted" : null}>
+          className={this.state.delete ? "deleted" : null}
+        >
           <p className={this.state.checked ? "pCheck" : null}>
             {this.state.name}
           </p>
@@ -101,12 +102,14 @@ class Task extends React.Component {
             className="check"
             type="checkbox"
             onClick={this.completeTask}
-            checked={this.state.checked}></input>
+            checked={this.state.checked}
+          ></input>
           <div className="ButtonGroup parentPosition">
             <button
               className="saveBtn"
               style={{ display: this.state.changeDisplay }}
-              onClick={this.saveTaskСhanges}>
+              onClick={this.saveTaskСhanges}
+            >
               save
             </button>
             <button className="change" onClick={this.changeTask}>
@@ -122,8 +125,7 @@ class Task extends React.Component {
             style={{ display: this.state.changeDisplay }}
             ref={this.inputRef}
             onChange={this.setInputValue}
-            ></input>
-            
+          ></input>
         </li>
       </>
     );
